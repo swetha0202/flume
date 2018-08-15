@@ -1,0 +1,68 @@
+Flume Agent : 
+
+Flume Agent is an independent Demon process in Flume,it recieves the data from clients or other Flume Agent and forwards it to next destinaton.
+
+A Flume can have more than one agent
+
+Basically Flume Agent  Contains 3 COmponents 
+
+1.Source 
+
+2.Channel
+
+3.Sink
+
+
+'Source' : Source is component of FA which recieves the data from data generators and forward to one or more Channels inthe form of Flume Events
+    --> Source dont have any storage types
+    --> Source send event to the channel to which source is connected
+############################# Supported Sources by flume ###################
+
+Spol directory ----> The spooling directory source is given a directory to watch for new files to appear. It is assumed that files copied to this directory are complete; 
+
+
+Avro   -- > AvroSource
+netcat --> NetcatSource
+seq    --> SequenceGenratorSource
+exec   --> ExecSource 
+syslogtcp --> SyslogTcp
+syslogudp --> SyslogUDPSource
+Thrift    --> ThriftLegacySource
+#############################################################################
+
+
+Channel : A channel is transient store which recieves the events from the source and buffers them untill they are consumed by sinks.it acts a bridge between source and sinks
+           --> Once flume Source sends events to channel,it stores in channel.
+	   ---> Channel is passive storage,it keeps the event untill the event is consumed by event 
+		sink.
+
+   3 types of channel   --> 
+Memory channel:  Stores event in-memory queue from there event is access by sink.
+		 Drawback --> if any software/hardware failes 
+				if agent process die in the middle
+
+File channel:  it is backed by local file system,unlike memory channel,file channel writes to the
+disk,the file will be deleted ,after it accessed by sink.
+
+Spillable Channel (not in production) : first it writes to the memory ,if the buffer size of memory is filled ,it splits to the local disk.	
+
+File channel,Spillable Channel
+these channels are fully transactional and they can work with many sources and sinks.
+   Ex: JDBC Channel,File System Channel,Memory Channel
+
+
+##########################################################################
+
+Sink:
+Sink removes the event from the channel and put it into on external repository like hdfs or towards to flume source of next flume agent in the flow.
+
+Source and sink within given agent run asynchronously with events staged in the channel,they dont wait for each other.
+There are many types of sinks 
+
+HDFS sink
+Logger sink
+File roll sink
+Hbase sink
+Morphline sink
+Elasticsearch sink
+Avro Sink
